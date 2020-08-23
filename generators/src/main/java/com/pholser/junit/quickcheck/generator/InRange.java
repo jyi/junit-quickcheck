@@ -133,4 +133,6 @@ public @interface InRange {
      * generators can use when converting values from strings
      */
     String format() default "";
+
+    boolean isFixed() default false;
 }
