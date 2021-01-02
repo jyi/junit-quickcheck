@@ -121,12 +121,14 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
 
     protected double getDelta(double seed) {
         int digits = countDigit((int) seed);
+        double delta;
         if (digits > 0) {
-            return getDelta(digits);
+            delta = getDelta(digits);
         } else {
-            double delta = seed * 0.1 * 5;
-            return delta;
+            delta = Math.abs(seed) * 0.1 * 5;
         }
+        assert delta >= 0;
+        return delta;
     }
 
     protected int getDelta(int digits) {
