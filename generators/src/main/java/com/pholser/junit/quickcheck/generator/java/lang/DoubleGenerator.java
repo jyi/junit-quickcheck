@@ -67,7 +67,7 @@ public class DoubleGenerator extends DecimalGenerator<Double> {
         useSeed = range.useSeed();
         seed = range.seedDouble();
         if (useSeed) {
-            int delta = getDelta((int) seed);
+            double delta = getDelta(seed);
             min = seed - delta;
             max = seed + delta;
         } else {

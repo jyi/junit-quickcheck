@@ -119,9 +119,19 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
 
     protected abstract T negate(T target);
 
-    protected int getDelta(int seed) {
+    protected double getDelta(double seed) {
+        int digits = countDigit((int) seed);
+        if (digits > 0) {
+            return getDelta(digits);
+        } else {
+            double delta = seed * 0.1 * 5;
+            return delta;
+        }
+    }
+
+    protected int getDelta(int digits) {
         int delta = 5;
-        for (int i = 1; i < countDigit(Math.abs(seed)); i++) {
+        for (int i = 1; i < digits; i++) {
             delta *= 10;
         }
         return delta;
