@@ -135,4 +135,14 @@ public @interface InRange {
     String format() default "";
 
     boolean isFixed() default false;
+
+    boolean useSeed() default false;
+
+    byte seedByte() default 0;
+
+    int seedInt() default 0;
+
+    double seedDouble() default 0D;
+
+    float seedFloat() default 0F;
 }

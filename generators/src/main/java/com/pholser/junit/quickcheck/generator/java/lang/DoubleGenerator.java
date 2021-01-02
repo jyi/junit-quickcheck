@@ -47,6 +47,8 @@ public class DoubleGenerator extends DecimalGenerator<Double> {
     private double min = (Double) defaultValueOf(InRange.class, "minDouble");
     private double max = (Double) defaultValueOf(InRange.class, "maxDouble");
 
+    private double seed = (Double) defaultValueOf(InRange.class, "seedDouble");
+
     @SuppressWarnings("unchecked") public DoubleGenerator() {
         super(asList(Double.class, double.class));
     }
@@ -62,12 +64,25 @@ public class DoubleGenerator extends DecimalGenerator<Double> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
-        min = range.min().isEmpty() ? range.minDouble() : Double.parseDouble(range.min());
-        max = range.max().isEmpty() ? range.maxDouble() : Double.parseDouble(range.max());
+        useSeed = range.useSeed();
+        seed = range.seedDouble();
+        if (useSeed) {
+            int delta = getDelta((int) seed);
+            min = seed - delta;
+            max = seed + delta;
+        } else {
+            min = range.min().isEmpty() ? range.minDouble() : Double.parseDouble(range.min());
+            max = range.max().isEmpty() ? range.maxDouble() : Double.parseDouble(range.max());
+        }
     }
 
     @Override public Double generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextDouble(min, max);
+        if (useSeed && !seedUsed) {
+            seedUsed = true;
+            return seed;
+        } else {
+            return random.nextDouble(min, max);
+        }
     }
 
     @Override protected Function<Double, BigDecimal> widen() {

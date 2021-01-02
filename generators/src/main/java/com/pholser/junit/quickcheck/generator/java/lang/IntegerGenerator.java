@@ -47,6 +47,8 @@ public class IntegerGenerator extends IntegralGenerator<Integer> {
     private int min = (Integer) defaultValueOf(InRange.class, "minInt");
     private int max = (Integer) defaultValueOf(InRange.class, "maxInt");
 
+    private int seed = (Integer) defaultValueOf(InRange.class, "seedInt");
+
     @SuppressWarnings("unchecked") public IntegerGenerator() {
         super(asList(Integer.class, int.class));
     }
@@ -61,13 +63,27 @@ public class IntegerGenerator extends IntegralGenerator<Integer> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
-        min = range.min().isEmpty() ? range.minInt() : Integer.parseInt(range.min());
-        max = range.max().isEmpty() ? range.maxInt() : Integer.parseInt(range.max());
+        useSeed = range.useSeed();
+        seed = range.seedInt();
+        if (useSeed) {
+            int delta = getDelta(seed);
+            min = seed - delta;
+            max = seed + delta;
+        } else {
+            min = range.min().isEmpty() ? range.minInt() : Integer.parseInt(range.min());
+            max = range.max().isEmpty() ? range.maxInt() : Integer.parseInt(range.max());
+        }
     }
 
     @Override public Integer generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextInt(min, max);
+        if (useSeed && !seedUsed) {
+            seedUsed = true;
+            return seed;
+        } else {
+            return random.nextInt(min, max);
+        }
     }
+
 
     @Override protected Function<BigInteger, Integer> narrow() {
         return BigInteger::intValue;

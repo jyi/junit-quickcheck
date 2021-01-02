@@ -47,6 +47,8 @@ public class ByteGenerator extends IntegralGenerator<Byte> {
     private byte min = (Byte) defaultValueOf(InRange.class, "minByte");
     private byte max = (Byte) defaultValueOf(InRange.class, "maxByte");
 
+    private byte seed = (Byte) defaultValueOf(InRange.class, "seedByte");
+
     @SuppressWarnings("unchecked") public ByteGenerator() {
         super(asList(Byte.class, byte.class));
     }
@@ -61,12 +63,25 @@ public class ByteGenerator extends IntegralGenerator<Byte> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
-        min = range.min().isEmpty() ? range.minByte() : Byte.parseByte(range.min());
-        max = range.max().isEmpty() ? range.maxByte() : Byte.parseByte(range.max());
+        useSeed = range.useSeed();
+        seed = range.seedByte();
+        if (useSeed) {
+            int delta = getDelta(seed);
+            min = (byte) (seed - delta);
+            max = (byte) (seed + delta);
+        } else {
+            min = range.min().isEmpty() ? range.minByte() : Byte.parseByte(range.min());
+            max = range.max().isEmpty() ? range.maxByte() : Byte.parseByte(range.max());
+        }
     }
 
     @Override public Byte generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextByte(min, max);
+        if (useSeed && !seedUsed) {
+            seedUsed = true;
+            return seed;
+        } else {
+            return random.nextByte(min, max);
+        }
     }
 
     @Override protected Function<BigInteger, Byte> narrow() {

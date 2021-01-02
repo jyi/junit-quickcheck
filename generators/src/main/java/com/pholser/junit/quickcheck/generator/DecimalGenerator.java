@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import com.pholser.junit.quickcheck.random.SourceOfRandomness;
 
+import static com.pholser.junit.quickcheck.internal.Reflection.defaultValueOf;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.StreamSupport.*;
@@ -51,6 +52,9 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
     protected DecimalGenerator(Class<T> type) {
         super(singletonList(type));
     }
+
+    protected boolean useSeed = (Boolean) defaultValueOf(InRange.class, "useSeed");
+    protected boolean seedUsed = false;
 
     protected DecimalGenerator(List<Class<T>> types) {
         super(types);
@@ -114,4 +118,21 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
     protected abstract boolean negative(T target);
 
     protected abstract T negate(T target);
+
+    protected int getDelta(int seed) {
+        int delta = 5;
+        for (int i = 1; i < countDigit(Math.abs(seed)); i++) {
+            delta *= 10;
+        }
+        return delta;
+    }
+
+    protected int countDigit(int n) {
+        int count = 0;
+        while (n != 0) {
+            n = n / 10;
+            ++count;
+        }
+        return count;
+    }
 }
