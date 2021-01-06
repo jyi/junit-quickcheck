@@ -47,6 +47,9 @@ public class ShortGenerator extends IntegralGenerator<Short> {
     private short min = (Short) defaultValueOf(InRange.class, "minShort");
     private short max = (Short) defaultValueOf(InRange.class, "maxShort");
 
+    private short seed = (Short) defaultValueOf(InRange.class, "seedShort");
+
+
     @SuppressWarnings("unchecked") public ShortGenerator() {
         super(asList(Short.class, short.class));
     }
@@ -61,12 +64,25 @@ public class ShortGenerator extends IntegralGenerator<Short> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
-        min = range.min().isEmpty() ? range.minShort() : Short.parseShort(range.min());
-        max = range.max().isEmpty() ? range.maxShort() : Short.parseShort(range.max());
+        useSeed = range.useSeed();
+        seed = range.seedShort();
+        if (useSeed) {
+            short delta = (short) getDelta((int) seed);
+            min = (short) (seed - delta);
+            max = (short) (seed + delta);
+        } else {
+            min = range.min().isEmpty() ? range.minShort() : Short.parseShort(range.min());
+            max = range.max().isEmpty() ? range.maxShort() : Short.parseShort(range.max());
+        }
     }
 
     @Override public Short generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextShort(min, max);
+        if (useSeed && !seedUsed) {
+            seedUsed = true;
+            return seed;
+        } else {
+            return random.nextShort(min, max);
+        }
     }
 
     @Override protected Function<BigInteger, Short> narrow() {
