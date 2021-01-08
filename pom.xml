@@ -260,10 +260,10 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
+		<!--<plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>3.0.3</version>
+                    <version>3.0.5</version>
                     <configuration>
                         <effort>Max</effort>
                         <threshold>Low</threshold>
@@ -277,7 +277,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
+		</plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
