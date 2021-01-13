@@ -145,4 +145,5 @@ public @interface InRange {
     double seedDouble() default 0D;
 
     float seedFloat() default 0F;
+
 }
