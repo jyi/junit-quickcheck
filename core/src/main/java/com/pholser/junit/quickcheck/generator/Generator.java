@@ -42,6 +42,7 @@ import org.javaruntype.type.TypeParameter;
 import org.javaruntype.type.Types;
 import org.javaruntype.type.WildcardTypeParameter;
 
+
 import static java.math.BigDecimal.*;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
@@ -57,6 +58,7 @@ public abstract class Generator<T> implements Gen<T>, Shrink<T> {
     private final List<Class<T>> types = new ArrayList<>();
 
     private Generators repo;
+
 
     /**
      * @param type class token for type of property parameter this generator is

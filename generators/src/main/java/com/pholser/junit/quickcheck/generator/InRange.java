@@ -127,6 +127,8 @@ public @interface InRange {
      */
     String max() default "";
 
+
+
     /**
      * @return a formatting hint, such as a
      * {@linkplain java.text.SimpleDateFormat date format string}, that
@@ -146,4 +148,9 @@ public @interface InRange {
 
     float seedFloat() default 0F;
 
+    long seedLong() default  0L;
+
+    short seedShort() default (short)0;
+
+    char seedChar() default (char)0;
 }

@@ -27,7 +27,10 @@ package com.pholser.junit.quickcheck.generator.java.lang;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
+import com.pholser.junit.quickcheck.generator.DecimalGenerator;
 import com.pholser.junit.quickcheck.generator.GenerationStatus;
 import com.pholser.junit.quickcheck.generator.Generator;
 import com.pholser.junit.quickcheck.generator.InRange;
@@ -46,6 +49,8 @@ public class CharacterGenerator extends Generator<Character> {
     private char min = (Character) defaultValueOf(InRange.class, "minChar");
     private char max = (Character) defaultValueOf(InRange.class, "maxChar");
 
+    private char seed = (Character) defaultValueOf(InRange.class, "seedChar");
+
     @SuppressWarnings("unchecked") public CharacterGenerator() {
         super(asList(Character.class, char.class));
     }
@@ -60,11 +65,29 @@ public class CharacterGenerator extends Generator<Character> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
+//        useSeed = range.useSeed();
+//        seed = range.seedChar();
+//        if (useSeed) {
+//            char delta = (char) getDelta((byte) seed);
+//            min = (char) (seed - delta);
+//            max = (char) (seed + delta);
+//        } else {
+//            min = range.min().isEmpty() ? range.minChar() : range.min().charAt(0);
+//            max = range.max().isEmpty() ? range.maxChar() : range.max().charAt(0);
+//        }
+
         min = range.min().isEmpty() ? range.minChar() : range.min().charAt(0);
         max = range.max().isEmpty() ? range.maxChar() : range.max().charAt(0);
+
     }
 
     @Override public Character generate(SourceOfRandomness random, GenerationStatus status) {
+//        if (useSeed && !seedUsed) {
+//            seedUsed = true;
+//            return seed;
+//        } else {
+//            return random.nextChar(min, max);
+//        }
         return random.nextChar(min, max);
     }
 
@@ -76,6 +99,8 @@ public class CharacterGenerator extends Generator<Character> {
             .filter(this::inRange)
             .collect(toList());
     }
+
+
 
     @Override public BigDecimal magnitude(Object value) {
         return BigDecimal.valueOf(narrow(value));
