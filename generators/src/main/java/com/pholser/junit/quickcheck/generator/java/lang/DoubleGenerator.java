@@ -48,6 +48,10 @@ public class DoubleGenerator extends DecimalGenerator<Double> {
     private double max = (Double) defaultValueOf(InRange.class, "maxDouble");
 
     private double seed = (Double) defaultValueOf(InRange.class, "seedDouble");
+    private double ratio = (Double) defaultValueOf(InRange.class, "ratioPF");
+
+    private double coeff = (Double) defaultValueOf(InRange.class, "deltaCoeff");
+    private int expo = (Integer) defaultValueOf(InRange.class, "deltaExpo");
 
     @SuppressWarnings("unchecked") public DoubleGenerator() {
         super(asList(Double.class, double.class));
@@ -66,10 +70,16 @@ public class DoubleGenerator extends DecimalGenerator<Double> {
     public void configure(InRange range) {
         useSeed = range.useSeed();
         seed = range.seedDouble();
+        coeff = range.deltaCoeff();
+        expo = range.deltaExpo();
         if (useSeed) {
+
             double delta = getDelta(seed);
-            min = seed - delta;
-            max = seed + delta;
+            System.out.println("Delta: " + Double.toString(delta));
+            min = seed-delta;
+            System.out.println("Min: " + Double.toString(min));
+            max = seed+delta;
+            System.out.println("Max: " + Double.toString(max));
         } else {
             min = range.min().isEmpty() ? range.minDouble() : Double.parseDouble(range.min());
             max = range.max().isEmpty() ? range.maxDouble() : Double.parseDouble(range.max());

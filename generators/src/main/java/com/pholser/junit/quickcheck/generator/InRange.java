@@ -153,4 +153,12 @@ public @interface InRange {
     short seedShort() default (short)0;
 
     char seedChar() default (char)0;
+
+    double ratioPF() default 0;
+
+    boolean useRatio() default  false;
+
+    double deltaCoeff() default  1;
+
+    int deltaExpo() default 1;
 }
