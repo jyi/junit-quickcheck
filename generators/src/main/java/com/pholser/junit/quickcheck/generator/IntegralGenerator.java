@@ -49,6 +49,7 @@ import static com.pholser.junit.quickcheck.internal.Sequences.*;
 public abstract class IntegralGenerator<T extends Number> extends Generator<T> {
     protected boolean useSeed = (Boolean) defaultValueOf(InRange.class, "useSeed");
     protected boolean seedUsed = false;
+    protected boolean useRatio = (Boolean) defaultValueOf(InRange.class, "useRatio");
 
     protected IntegralGenerator(Class<T> type) {
         super(singletonList(type));
@@ -103,6 +104,15 @@ public abstract class IntegralGenerator<T extends Number> extends Generator<T> {
         }
         return delta;
     }
+
+    protected int getDelta(int seed, double ratio) {
+        int delta = 5;
+        for (int i = 1; i < countDigit(Math.abs(seed)); i++) {
+            delta *= 10;
+        }
+        return delta;
+    }
+
 
     protected int countDigit(long n) {
         int count = 0;

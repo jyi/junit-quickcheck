@@ -48,6 +48,10 @@ public class IntegerGenerator extends IntegralGenerator<Integer> {
     private int max = (Integer) defaultValueOf(InRange.class, "maxInt");
 
     private int seed = (Integer) defaultValueOf(InRange.class, "seedInt");
+    private double ratio = (Double) defaultValueOf(InRange.class, "ratioPF");
+
+    private double coeff = (Double) defaultValueOf(InRange.class, "deltaCoeff");
+    private int expo = (Integer) defaultValueOf(InRange.class, "deltaExpo");
 
     @SuppressWarnings("unchecked") public IntegerGenerator() {
         super(asList(Integer.class, int.class));
@@ -65,8 +69,12 @@ public class IntegerGenerator extends IntegralGenerator<Integer> {
     public void configure(InRange range) {
         useSeed = range.useSeed();
         seed = range.seedInt();
+        useRatio = range.useRatio();
+        coeff = range.deltaCoeff();
+        expo = range.deltaExpo();
+//        ratio = range.ratioPF();
         if (useSeed) {
-            int delta = getDelta(seed);
+            int delta = (int) (getDelta(seed));
             min = seed - delta;
             max = seed + delta;
         } else {

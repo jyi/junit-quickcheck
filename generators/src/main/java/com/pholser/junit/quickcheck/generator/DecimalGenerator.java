@@ -56,6 +56,8 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
     protected boolean useSeed = (Boolean) defaultValueOf(InRange.class, "useSeed");
     protected boolean seedUsed = false;
 
+    protected boolean useRatio = (Boolean) defaultValueOf(InRange.class, "useRatio");
+
     protected DecimalGenerator(List<Class<T>> types) {
         super(types);
     }
@@ -120,20 +122,45 @@ public abstract class DecimalGenerator<T extends Number> extends Generator<T> {
     protected abstract T negate(T target);
 
     protected double getDelta(double seed) {
+        String[] seedSplit = Double.toString(seed).split("E");
+        seed = Double.parseDouble(seedSplit[0]);
         int digits = countDigit((int) seed);
-        if (digits > 0) {
-            return getDelta(digits);
-        } else {
-            double delta = seed * 0.1 * 5;
-            return delta;
+        if(seedSplit.length == 2) {
+            digits += Integer.parseInt(seedSplit[1]);
+            seed = seed * Math.pow(10,155);
         }
+
+        double delta;
+        if (digits > 0) {
+            System.out.println("Digit: " + Double.toString(digits));
+            delta = getDelta(digits);
+        } else {
+            delta = Math.abs(seed) * 0.1 * 5;
+        }
+        assert delta >= 0;
+        return delta;
+    }
+
+    protected double getDelta(double seed, double ratio) {
+        int digits = countDigit((int) seed);
+        double delta;
+        if (digits > 0) {
+            delta = getDelta(digits);
+        } else {
+            delta = Math.abs(seed) * 0.1 * 5;
+        }
+        assert delta >= 0;
+        return delta;
     }
 
     protected int getDelta(int digits) {
         int delta = 5;
-        for (int i = 1; i < digits; i++) {
-            delta *= 10;
-        }
+//        for (int i = 1; i < digits; i++) {
+//            System.out.println("Digit: " + Double.toString(digits));
+//            delta = delta * 10;
+//        }
+        delta = (int) (5 * Math.pow(10,digits));
+
         return delta;
     }
 

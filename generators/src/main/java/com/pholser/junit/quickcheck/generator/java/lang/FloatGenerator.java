@@ -65,7 +65,7 @@ public class FloatGenerator extends DecimalGenerator<Float> {
         useSeed = range.useSeed();
         seed = range.seedFloat();
         if (useSeed) {
-            int delta = getDelta((int) seed);
+            float delta = (float) getDelta((double) seed);
             min = seed - delta;
             max = seed + delta;
         } else {

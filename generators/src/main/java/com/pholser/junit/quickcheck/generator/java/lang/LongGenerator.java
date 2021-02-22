@@ -47,6 +47,8 @@ public class LongGenerator extends IntegralGenerator<Long> {
     private long min = (Long) defaultValueOf(InRange.class, "minLong");
     private long max = (Long) defaultValueOf(InRange.class, "maxLong");
 
+    private long seed = (Long) defaultValueOf(InRange.class, "seedLong");
+
     @SuppressWarnings("unchecked") public LongGenerator() {
         super(asList(Long.class, long.class));
     }
@@ -61,12 +63,25 @@ public class LongGenerator extends IntegralGenerator<Long> {
      * @param range annotation that gives the range's constraints
      */
     public void configure(InRange range) {
-        min = range.min().isEmpty() ? range.minLong() : Long.parseLong(range.min());
-        max = range.max().isEmpty() ? range.maxLong() : Long.parseLong(range.max());
+        useSeed = range.useSeed();
+        seed = range.seedLong();
+        if (useSeed) {
+            long delta = (long) getDelta((int) seed);
+            min = seed - delta;
+            max = seed + delta;
+        } else {
+            min = range.min().isEmpty() ? range.minLong() : Long.parseLong(range.min());
+            max = range.max().isEmpty() ? range.maxLong() : Long.parseLong(range.max());
+        }
     }
 
     @Override public Long generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextLong(min, max);
+        if (useSeed && !seedUsed) {
+            seedUsed = true;
+            return seed;
+        } else {
+            return random.nextLong(min, max);
+        }
     }
 
     @Override protected Function<BigInteger, Long> narrow() {
