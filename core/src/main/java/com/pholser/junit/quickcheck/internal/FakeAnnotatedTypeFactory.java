@@ -60,6 +60,10 @@ final class FakeAnnotatedTypeFactory {
             return makeFrom(type.getComponentType());
         }
 
+        public AnnotatedType getAnnotatedOwnerType() {
+            return null;
+        }
+        
         @Override public Type getType() {
             return type;
         }
