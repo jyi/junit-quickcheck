@@ -1,7 +1,7 @@
 /*
  The MIT License
 
- Copyright (c) 2010-2018 Paul R. Holser, Jr.
+ Copyright (c) 2010-2021 Paul R. Holser, Jr.
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the
@@ -58,6 +58,12 @@ final class FakeAnnotatedTypeFactory {
 
         @Override public AnnotatedType getAnnotatedGenericComponentType() {
             return makeFrom(type.getComponentType());
+        }
+
+        // Not introduced until JDK 9 -- not marking as...
+        // @Override
+        public AnnotatedType getAnnotatedOwnerType() {
+            return null;
         }
 
         @Override public Type getType() {
